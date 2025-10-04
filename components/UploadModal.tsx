@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import useUploadModal from "@/hooks/useUploadModal";
-import { FieldValue, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import Input from "./Input";
 import Button from "./Button";
 import toast from "react-hot-toast";
@@ -11,6 +11,13 @@ import uniqid from "uniqid";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
 
+interface FormValues {
+  title: string;
+  author: string;
+  image: FileList | null;
+  song: FileList | null;
+}
+
 const UploadModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const uploadModal = useUploadModal();
@@ -18,7 +25,7 @@ const UploadModal = () => {
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
 
-  const { register, handleSubmit, reset } = useForm<FieldValue>({
+  const { register, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
       author: "",
       title: "",
@@ -34,7 +41,7 @@ const UploadModal = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<FieldValue> = async (values) => {
+  const onSubmit: SubmitHandler<FormValues> = async (values) => {
     try {
       setIsLoading(true);
 
